@@ -13,7 +13,7 @@ import {
 import { useGitHubRepoContributors } from '../lib/github';
 
 export const App: React.FC = () => {
-  const [inputPkgName, setInputPkgName] = useState('astro');
+  const [inputPkgName, setInputPkgName] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
@@ -36,6 +36,9 @@ export const App: React.FC = () => {
   } = useGitHubRepoContributors();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!inputPkgName) {
+      return;
+    }
     setErrorMessage(null);
 
     // npm registry APIからパッケージについての情報を取得する
