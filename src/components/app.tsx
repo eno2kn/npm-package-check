@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { hc } from 'hono/client';
 import { AppType } from '../api';
 import { Result, Status } from './result';
+import { Badges } from './badge';
 
 type NpmPkgData = {
   latest:
@@ -32,12 +33,16 @@ function calcStatus<T>(
 
 export const App: React.FC = () => {
   const [inputPkgName, setInputPkgName] = useState('');
+  const [pkgName, setPkgName] = useState('');
+
   const [data, setData] = useState<NpmPkgData>({
     downloads: undefined,
     contributors: undefined,
     latest: undefined,
   });
+
   const [isLoading, setLoading] = useState(false);
+  const [isError, setError] = useState(false);
   const downloadsStatus = useMemo(
     () => calcStatus(data.downloads, (v) => v < 1000),
     [data],
@@ -56,7 +61,6 @@ export const App: React.FC = () => {
       ),
     [data],
   );
-  const [isError, setError] = useState(false);
 
   const getStatus = useCallback(
     (st: Exclude<Status, 'loading'>): Status => {
@@ -72,21 +76,24 @@ export const App: React.FC = () => {
     if (!inputPkgName) return;
 
     setLoading(true);
+    setError(false);
+    setPkgName('');
+    setData({
+      latest: undefined,
+      downloads: undefined,
+      contributors: undefined,
+    });
 
     const res = await client.api.npm.$get({
       query: { name: inputPkgName },
     });
 
     if (!res.ok) {
-      setData({
-        latest: undefined,
-        downloads: undefined,
-        contributors: undefined,
-      });
       setLoading(false);
       setError(true);
       return;
     }
+    setPkgName(inputPkgName);
 
     const json = await res.json();
     const { latest, downloads, contributors } = json;
@@ -121,6 +128,12 @@ export const App: React.FC = () => {
       {isError && (
         <div className="mb-6 p-4 rounded border border-red-300 bg-red-50">
           エラーが発生しました
+        </div>
+      )}
+      {!isLoading && pkgName && (
+        <div className="mb-6">
+          <div className="mb-2 text-lg font-semibold">{pkgName}</div>
+          <Badges name={pkgName} />
         </div>
       )}
       <div className="flex flex-col gap-4">
