@@ -1,126 +1,124 @@
-import { useMemo } from 'react';
-import { NpmPackageResult } from './npm-package-result';
 import { cn } from '../lib/utils';
-import type { ContributorData } from '../lib/github';
-import type { NpmPackageDownloadCount, NpmPackage } from '../lib/npm-registry';
 
-type NpmPackageDownloadCountProps = {
-  loading: boolean;
-  downloadCount: NpmPackageDownloadCount | undefined;
-};
-
-export const DownloadCountResult: React.FC<NpmPackageDownloadCountProps> = ({
-  loading,
-  downloadCount,
-}) => {
-  const { status, count } = useMemo(() => {
-    if (loading) {
-      return { status: 'loading', count: undefined } as const;
-    }
-    if (typeof downloadCount === 'undefined') {
-      return { status: 'initial', count: undefined } as const;
-    }
-    const count = downloadCount.downloads;
-    if (count < 1000) {
-      return { status: 'error', count } as const;
-    }
-    return { status: 'success', count } as const;
-  }, [downloadCount, loading]);
-
+const IconCircle: React.FC = () => {
   return (
-    <NpmPackageResult.Container
-      className={cn([status === 'initial' && 'opacity-50'])}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-gray-400"
     >
-      <NpmPackageResult.Icon status={status} />
-      <NpmPackageResult.Content>
-        <NpmPackageResult.Label>1ヶ月のダウンロード数</NpmPackageResult.Label>
-        <NpmPackageResult.Result value={count}>{count}</NpmPackageResult.Result>
-      </NpmPackageResult.Content>
-    </NpmPackageResult.Container>
+      <circle cx="12" cy="12" r="10" />
+    </svg>
   );
 };
 
-type ContributorsResultProps = {
-  loading: boolean;
-  contributors: ContributorData[] | undefined;
-};
-
-export const ContributorsResult: React.FC<ContributorsResultProps> = ({
-  loading,
-  contributors,
-}) => {
-  const { status, count } = useMemo(() => {
-    if (loading) {
-      return { status: 'loading', count: undefined } as const;
-    }
-    if (typeof contributors === 'undefined') {
-      return { status: 'initial', count: undefined } as const;
-    }
-    const count = contributors.length;
-    if (count < 3) {
-      return { status: 'error', count } as const;
-    }
-    return { status: 'success', count } as const;
-  }, [contributors, loading]);
-
+const IconCheckCircle: React.FC = () => {
   return (
-    <NpmPackageResult.Container
-      className={cn([status === 'initial' && 'opacity-50'])}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-green-500"
     >
-      <NpmPackageResult.Icon status={status} />
-      <NpmPackageResult.Content>
-        <NpmPackageResult.Label>Contributorの数</NpmPackageResult.Label>
-        <NpmPackageResult.Result value={count}>{count}</NpmPackageResult.Result>
-      </NpmPackageResult.Content>
-    </NpmPackageResult.Container>
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <path d="m9 11 3 3L22 4" />
+    </svg>
   );
 };
 
-type LatestVersionPublishedAtResultProps = {
-  loading: boolean;
-  npmPackage: NpmPackage | undefined;
+const IconAlertCircle: React.FC = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-red-500"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" x2="12" y1="8" y2="12" />
+      <line x1="12" x2="12.01" y1="16" y2="16" />
+    </svg>
+  );
 };
 
-export const LatestVersionPublishedAtResult: React.FC<
-  LatestVersionPublishedAtResultProps
-> = ({ loading, npmPackage }) => {
-  const formatter = new Intl.DateTimeFormat('ja-JP');
-  const { status, publishedAt, latest } = useMemo(() => {
-    if (loading) {
-      return {
-        status: 'loading',
-        publishedAt: undefined,
-        latest: undefined,
-      } as const;
-    }
-    if (typeof npmPackage === 'undefined') {
-      return {
-        status: 'initial',
-        publishedAt: undefined,
-        latest: undefined,
-      } as const;
-    }
-    const latest = npmPackage['dist-tags'].latest;
-    const publishedAt = new Date(npmPackage.time[latest]);
-    if (Date.now() - publishedAt.getTime() > 1000 * 60 * 60 * 24 * 365) {
-      return { status: 'error', publishedAt, latest } as const;
-    }
-    return { status: 'success', publishedAt, latest } as const;
-  }, [loading, npmPackage]);
-
+const IconLoader: React.FC = () => {
   return (
-    <NpmPackageResult.Container
-      className={cn([status === 'initial' && 'opacity-50'])}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-gray-400 animate-spin"
     >
-      <NpmPackageResult.Icon status={status} />
-      <NpmPackageResult.Content>
-        <NpmPackageResult.Label>
-          最新バージョンのリリース日
-        </NpmPackageResult.Label>
-        <NpmPackageResult.Result value={latest && publishedAt}>
-          {`v${latest} ${formatter.format(publishedAt)}`}
-        </NpmPackageResult.Result>
-      </NpmPackageResult.Content>
-    </NpmPackageResult.Container>
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+  );
+};
+
+export type Status = 'initial' | 'loading' | 'success' | 'error';
+
+export const ResultIcon: React.FC<{
+  status: Status;
+}> = ({ status }) => {
+  switch (status) {
+    case 'initial':
+      return <IconCircle />;
+    case 'loading':
+      return <IconLoader />;
+    case 'success':
+      return <IconCheckCircle />;
+    case 'error':
+      return <IconAlertCircle />;
+    default:
+      break;
+  }
+};
+
+export const Result: React.FC<{
+  status: Status;
+  label: string;
+  value: undefined | string | number;
+}> = ({ status, label, value }) => {
+  return (
+    <div
+      className={cn([
+        'flex items-center gap-4 rounded border border-gray-200 bg-gray-50 p-4',
+        status === 'initial' && 'opacity-50',
+      ])}
+    >
+      <ResultIcon status={status} />
+      <div className="flex flex-col gap-1">
+        <div className="text-sm text-gray-700">{label}</div>
+        {typeof value === 'undefined' ? (
+          <div className="h-6" />
+        ) : (
+          <div className="text-base leading-6">{value}</div>
+        )}
+      </div>
+    </div>
   );
 };
