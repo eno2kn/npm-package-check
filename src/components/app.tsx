@@ -37,18 +37,14 @@ export const App: React.FC = () => {
 
   const [data, setData] = useState<NpmPkgData>({
     downloads: undefined,
-    contributors: undefined,
     latest: undefined,
+    contributors: undefined,
   });
 
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(false);
   const downloadsStatus = useMemo(
-    () => calcStatus(data.downloads, (v) => v < 1000),
-    [data],
-  );
-  const contributorsStatus = useMemo(
-    () => calcStatus(data.contributors, (v) => v < 3),
+    () => calcStatus(data.downloads, (v) => v < 500),
     [data],
   );
   const latestStatus = useMemo(
@@ -59,6 +55,10 @@ export const App: React.FC = () => {
           Date.now() - new Date(v.publishedAt).getTime() >
           1000 * 60 * 60 * 24 * 365,
       ),
+    [data],
+  );
+  const contributorsStatus = useMemo(
+    () => calcStatus(data.contributors, (v) => v < 3),
     [data],
   );
 
@@ -138,14 +138,9 @@ export const App: React.FC = () => {
       )}
       <div className="flex flex-col gap-4">
         <Result
-          label="1ヶ月のダウンロード数"
+          label="週間ダウンロード数"
           value={data.downloads}
           status={getStatus(downloadsStatus)}
-        />
-        <Result
-          label="Contributorの数"
-          value={data.contributors}
-          status={getStatus(contributorsStatus)}
         />
         <Result
           label="最新バージョンのリリース日"
@@ -156,6 +151,11 @@ export const App: React.FC = () => {
             ).toLocaleDateString('ja-JP')}`
           }
           status={getStatus(latestStatus)}
+        />
+        <Result
+          label="コントリビューターの人数"
+          value={data.contributors}
+          status={getStatus(contributorsStatus)}
         />
       </div>
     </div>

@@ -31,16 +31,6 @@ export type NpmPackage = {
   };
 };
 
-/**
- * @see https://github.com/npm/registry/blob/master/docs/download-counts.md
- */
-export type NpmPackageDownloadCount = {
-  downloads: number;
-  start: string;
-  end: string;
-  package: string;
-};
-
 function parsePackageJSONRepository(pkg: NpmPackage) {
   const repo = pkg.repository;
   if (!repo) {
@@ -117,9 +107,19 @@ async function getAllContributors(owner: string, repo: string) {
   return contributors;
 }
 
+/**
+ * @see https://github.com/npm/registry/blob/master/docs/download-counts.md
+ */
+export type NpmPackageDownloadCount = {
+  downloads: number;
+  start: string;
+  end: string;
+  package: string;
+};
+
 async function getDonwloads(name: string) {
   const npmDownloadsRes = await fetch(
-    `https://api.npmjs.org/downloads/point/last-month/${name}`,
+    `https://api.npmjs.org/downloads/point/last-week/${name}`,
   );
   const npmDownloadsJson =
     (await npmDownloadsRes.json()) as NpmPackageDownloadCount;
