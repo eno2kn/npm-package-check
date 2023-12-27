@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 export const NpmVersionBadge: React.FC<{
   name: string;
 }> = ({ name }) => {
@@ -54,7 +56,7 @@ export const SnykBadge: React.FC<{
 
 export const Badges: React.FC<{
   name: string;
-}> = ({ name }) => {
+}> = memo(function Badges({ name }) {
   return (
     <div className="flex gap-2">
       <NpmVersionBadge name={name} />
@@ -62,4 +64,4 @@ export const Badges: React.FC<{
       <SnykBadge name={name} />
     </div>
   );
-};
+});

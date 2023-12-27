@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { cn } from '../lib/utils';
 
 const IconCircle: React.FC = () => {
@@ -102,7 +103,7 @@ export const Result: React.FC<{
   status: Status;
   label: string;
   value: undefined | string | number;
-}> = ({ status, label, value }) => {
+}> = memo(function Result({ status, label, value }) {
   return (
     <div
       className={cn([
@@ -121,4 +122,4 @@ export const Result: React.FC<{
       </div>
     </div>
   );
-};
+});
