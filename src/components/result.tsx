@@ -117,7 +117,9 @@ export const Result: React.FC<{
         {typeof value === 'undefined' ? (
           <div className="h-6" />
         ) : (
-          <div className="text-base leading-6">{value}</div>
+          <div className="text-base leading-6">
+            {typeof value === 'number' ? value.toLocaleString('ja-JP') : value}
+          </div>
         )}
       </div>
     </div>
