@@ -8,7 +8,7 @@ export const NpmVersionBadge: React.FC<{
       rel="noopener noreferrer"
     >
       <img
-        src={`https://badge.fury.io/js/${name}.svg`}
+        src={`https://badge.fury.io/js/${encodeURIComponent(name)}.svg`}
         alt="npm version"
         referrerPolicy="no-referrer"
       />
