@@ -103,7 +103,8 @@ export const Result: React.FC<{
   status: Status;
   label: string;
   value: undefined | string | number;
-}> = memo(function Result({ status, label, value }) {
+  counter?: string;
+}> = memo(function Result({ status, label, value, counter }) {
   return (
     <div
       className={cn([
@@ -119,6 +120,7 @@ export const Result: React.FC<{
         ) : (
           <div className="text-base leading-6">
             {typeof value === 'number' ? value.toLocaleString('ja-JP') : value}
+            {counter && <span className="text-sm">{counter}</span>}
           </div>
         )}
       </div>

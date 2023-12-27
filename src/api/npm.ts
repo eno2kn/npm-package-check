@@ -152,7 +152,7 @@ export const npmRoute = app.get(
     });
 
     if (!npmPkgRes.ok) {
-      throw new HTTPException(400, { message: 'Package not found.' });
+      throw new HTTPException(404, { message: 'Package not found.' });
     }
     const pkg = (await npmPkgRes.json()) as NpmPackage;
 
@@ -173,6 +173,7 @@ export const npmRoute = app.get(
         },
         downloads: downloads.downloads,
         contributors: undefined,
+        github: undefined,
       });
     } else {
       const { owner, repo } = githubRepo;
@@ -189,6 +190,7 @@ export const npmRoute = app.get(
         },
         downloads: downloads.downloads,
         contributors: contributors.length,
+        github: `https://github.com/${owner}/${repo}`,
       });
     }
   },
