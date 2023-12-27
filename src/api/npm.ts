@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { cache } from 'hono/cache';
 import { validator } from 'hono/validator';
 import { HTTPException } from 'hono/http-exception';
 
@@ -129,6 +130,10 @@ export const app = new Hono();
 
 export const npmRoute = app.get(
   '/',
+  cache({
+    cacheName: 'npm-api',
+    cacheControl: 'max-age=3600, stale-while-revalidate=360',
+  }),
   validator('query', (value) => {
     const name = value.name;
     if (!name || typeof name !== 'string') {
