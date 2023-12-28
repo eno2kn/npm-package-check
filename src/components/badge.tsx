@@ -33,7 +33,7 @@ export const Badges: React.FC<{
   name: string;
 }> = memo(function Badges({ name }) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 min-h-5">
       <SocketBadge name={name} />
       <SnykBadge name={name} />
     </div>

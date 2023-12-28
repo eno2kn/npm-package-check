@@ -14,6 +14,7 @@ const IconCircle: React.FC = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="text-gray-400"
+      aria-hidden="true"
     >
       <circle cx="12" cy="12" r="10" />
     </svg>
@@ -33,6 +34,8 @@ const IconCheckCircle: React.FC = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="text-green-500"
+      role="img"
+      aria-label="success"
     >
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <path d="m9 11 3 3L22 4" />
@@ -53,6 +56,8 @@ const IconAlertCircle: React.FC = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="text-red-500"
+      role="img"
+      aria-label="warning"
     >
       <circle cx="12" cy="12" r="10" />
       <line x1="12" x2="12" y1="8" y2="12" />
@@ -74,6 +79,8 @@ const IconLoader: React.FC = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="text-gray-400 animate-spin"
+      role="img"
+      aria-label="loading"
     >
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
