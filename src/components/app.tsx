@@ -80,10 +80,15 @@ export const App: React.FC = () => {
       setLoading(false);
       switch (res.status) {
         case 404:
-          setErrorMessage('パッケージが存在しません');
+          setErrorMessage('パッケージが存在しません。');
+          break;
+        case 429:
+          setErrorMessage(
+            'リクエスト数の上限に達しました。時間をあけて再度お試しください。',
+          );
           break;
         default:
-          setErrorMessage('エラーが発生しました');
+          setErrorMessage('エラーが発生しました。');
           break;
       }
       return;
@@ -118,16 +123,44 @@ export const App: React.FC = () => {
           />
           <button
             type="submit"
-            className="border-l border-gray-300 whitespace-nowrap px-3"
-            disabled={!inputPkgName}
+            className="border-l border-gray-300 whitespace-nowrap px-3 disabled:opacity-50"
+            disabled={!inputPkgName || isLoading}
           >
             チェック
           </button>
         </div>
       </form>
       {errorMessage && (
-        <div className="mb-6 p-4 rounded border border-red-300 bg-red-50">
-          {errorMessage}
+        <div className="flex gap-3 mb-6 p-4 rounded border border-red-300 bg-red-50">
+          <svg
+            viewBox="0 0 24 24"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="shrink-0 w-6 h-6 text-red-400"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              className="fill-current stroke-current"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="8"
+              y2="12"
+              className="fill-none stroke-red-50"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="16"
+              y2="16"
+              className="fill-none stroke-red-50"
+            />
+          </svg>
+          <p>{errorMessage}</p>
         </div>
       )}
       {pkgName && (
@@ -144,7 +177,6 @@ export const App: React.FC = () => {
               className="flex items-center gap-2"
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 className="w-3 h-3 fill-current"
                 aria-hidden="true"
@@ -159,7 +191,6 @@ export const App: React.FC = () => {
                 className="flex items-center gap-2"
               >
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   className="w-3 h-3 fill-current"
                   aria-hidden="true"

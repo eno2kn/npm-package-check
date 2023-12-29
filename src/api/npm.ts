@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cache } from 'hono/cache';
 import { validator } from 'hono/validator';
 import { HTTPException } from 'hono/http-exception';
+import { rateLimitMiddleware } from './middlewares/rate-limit';
 
 /**
  * @see https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md
@@ -126,13 +127,18 @@ async function getDonwloads(name: string) {
   return npmDownloadsJson;
 }
 
-export const app = new Hono();
+const app = new Hono();
 
 export const npmRoute = app.get(
   '/',
   cache({
     cacheName: 'npm-api',
     cacheControl: 'max-age=86400, stale-while-revalidate=3600',
+  }),
+  rateLimitMiddleware({
+    max: 500,
+    ttl: 1000 * 60 * 5, // 5分
+    limit: 30,
   }),
   validator('query', (value) => {
     const name = value.name;
