@@ -20,15 +20,14 @@ export type NpmPackage = {
     type: 'git';
     /**
      * @example
-     *  - `https://github.com/{owner}/{repo}.git`
-     *  - `git+https://github.com/{owner}/{repo}.git`
-     *  - `git+ssh://git@github.com/{owner}/{repo}.git`
-     *  - `git+ssh://git@github.com/{owner}/{repo}.git`
-     *  - `github:{owner}/{repo}`
+     *  - 1 `git://github.com/{owner}/{repo}.git`
+     *  - 1 `git+ssh://git@github.com/{owner}/{repo}.git`
+     *  - 1 `git+https://github.com/{owner}/{repo}.git`
+     *  - 1 `https://github.com/{owner}/{repo}.git`
+     *  - 1 `ssh://git@github.com/{owner}/{repo}.git`
+     *  - 2 `github:{owner}/{repo}`
      */
     url: string;
-    /** モノレポの場合 */
-    directory?: string;
   };
 };
 
@@ -38,36 +37,24 @@ function parsePackageJSONRepository(pkg: NpmPackage) {
     return null;
   }
   const repoURL = repo.url;
-  const dir = repo.directory;
 
   const pattern1 =
-    /^(git\+)?https:\/\/github.com\/(?<owner>.+?)\/(?<repo>.+?).git$/.exec(
+    /^(git|git\+ssh|git\+https|https|ssh):\/\/(.+?)\/(?<owner>.+?)\/(?<repo>.+?).git$/.exec(
       repoURL,
     );
   if (pattern1) {
     const owner = pattern1.groups?.owner;
     const repo = pattern1.groups?.repo;
 
-    return owner && repo ? { owner, repo, dir } : null;
+    return owner && repo ? { owner, repo } : null;
   }
 
-  const pattern2 =
-    /^(git\+)?ssh:\/\/git@github.com\/(?<owner>.+?)\/(?<repo>.+?).git$/.exec(
-      repoURL,
-    );
+  const pattern2 = /^github:(?<owner>.+?)\/(?<repo>.+?)$/.exec(repoURL);
   if (pattern2) {
     const owner = pattern2.groups?.owner;
     const repo = pattern2.groups?.repo;
 
-    return owner && repo ? { owner, repo, dir } : null;
-  }
-
-  const pattern3 = /^github:(?<owner>.+?)\/(?<repo>.+?)$/.exec(repoURL);
-  if (pattern3) {
-    const owner = pattern3.groups?.owner;
-    const repo = pattern3.groups?.repo;
-
-    return owner && repo ? { owner, repo, dir } : null;
+    return owner && repo ? { owner, repo } : null;
   }
 
   return null;
