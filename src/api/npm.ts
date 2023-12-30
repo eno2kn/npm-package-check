@@ -17,7 +17,6 @@ export type NpmPackage = {
    * @see https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository
    */
   repository?: {
-    type: 'git';
     /**
      * @example
      *  - 1 `git://github.com/{owner}/{repo}.git`
@@ -31,16 +30,14 @@ export type NpmPackage = {
   };
 };
 
-function parsePackageJSONRepository(pkg: NpmPackage) {
-  const repo = pkg.repository;
+export function getGitHubRepoFromRepository(repo: NpmPackage['repository']) {
   if (!repo) {
     return null;
   }
-  const repoURL = repo.url;
-
+  const url = repo.url;
   const pattern1 =
-    /^(git|git\+ssh|git\+https|https|ssh):\/\/(.+?)\/(?<owner>.+?)\/(?<repo>.+?).git$/.exec(
-      repoURL,
+    /^(git|git\+ssh|git\+https|https|ssh):\/\/(git@)?(github\.com)\/(?<owner>.+?)\/(?<repo>.+?).git$/.exec(
+      url,
     );
   if (pattern1) {
     const owner = pattern1.groups?.owner;
@@ -49,7 +46,7 @@ function parsePackageJSONRepository(pkg: NpmPackage) {
     return owner && repo ? { owner, repo } : null;
   }
 
-  const pattern2 = /^github:(?<owner>.+?)\/(?<repo>.+?)$/.exec(repoURL);
+  const pattern2 = /^github:(?<owner>.+?)\/(?<repo>.+?)$/.exec(url);
   if (pattern2) {
     const owner = pattern2.groups?.owner;
     const repo = pattern2.groups?.repo;
@@ -153,7 +150,7 @@ export const npmRoute = app.get(
     const latest = pkg['dist-tags'].latest;
     const publishedAt = pkg.time[latest];
 
-    const githubRepo = parsePackageJSONRepository(pkg);
+    const githubRepo = getGitHubRepoFromRepository(pkg.repository);
 
     if (!githubRepo) {
       // package.jsonにrepositoryの情報がない
