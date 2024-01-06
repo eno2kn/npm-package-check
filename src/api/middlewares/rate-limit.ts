@@ -9,7 +9,11 @@ export const rateLimitMiddleware = (config: RateLimitConfig) => {
     const cfIp = c.req.raw.headers.get('cf-connecting-ip');
     const forwardedFor = c.req.raw.headers.get('x-forwarded-for');
     const realIp = c.req.raw.headers.get('x-real-ip');
-    const ip = cfIp || forwardedFor || realIp || 'Unknown';
+    const ip =
+      cfIp ||
+      (forwardedFor && forwardedFor.split(',').at(0)) ||
+      realIp ||
+      'Unknown';
 
     const { success, limit, remaining } = await ratelimit.limit(ip);
     c.res.headers.set('X-RateLimit-Limit', limit.toString());
