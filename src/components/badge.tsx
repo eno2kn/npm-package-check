@@ -2,19 +2,18 @@ import { memo, useState } from 'react';
 import { ExternalLink } from './link';
 import { cn } from '../lib/utils';
 
-export const SocketBadge: React.FC<{
-  name: string;
-}> = ({ name }) => {
+const Badge: React.FC<{
+  href: string;
+  src: string;
+  alt: string;
+}> = ({ href, src, alt }) => {
   const [isError, setError] = useState(false);
 
   return (
-    <ExternalLink
-      href={`https://socket.dev/npm/package/${name}`}
-      className={cn([isError && 'hidden'])}
-    >
+    <ExternalLink href={href} className={cn([isError && 'hidden'])}>
       <img
-        src={`https://socket.dev/api/badge/npm/package/${name}`}
-        alt="socket"
+        src={src}
+        alt={alt}
         referrerPolicy="no-referrer"
         onError={() => {
           setError(true);
@@ -24,25 +23,27 @@ export const SocketBadge: React.FC<{
   );
 };
 
-export const SnykBadge: React.FC<{
+const SocketBadge: React.FC<{
   name: string;
 }> = ({ name }) => {
-  const [isError, setError] = useState(false);
-
   return (
-    <ExternalLink
+    <Badge
+      href={`https://socket.dev/npm/package/${name}`}
+      src={`https://socket.dev/api/badge/npm/package/${name}`}
+      alt="socket"
+    />
+  );
+};
+
+const SnykBadge: React.FC<{
+  name: string;
+}> = ({ name }) => {
+  return (
+    <Badge
       href={`https://snyk.io/advisor/npm-package/${name}`}
-      className={cn([isError && 'hidden'])}
-    >
-      <img
-        src={`https://snyk.io//advisor/npm-package/${name}/badge.svg`}
-        alt="snyk"
-        referrerPolicy="no-referrer"
-        onError={() => {
-          setError(true);
-        }}
-      />
-    </ExternalLink>
+      src={`https://snyk.io//advisor/npm-package/${name}/badge.svg`}
+      alt="snyk"
+    />
   );
 };
 
