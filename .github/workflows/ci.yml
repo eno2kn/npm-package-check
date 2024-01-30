@@ -1,8 +1,8 @@
 name: ci
 on:
+  pull_request:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   test:
@@ -17,4 +17,5 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
       - run: pnpm install
-      - run: npm test
+      - name: Test
+        run: npm test
