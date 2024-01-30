@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { hc } from 'hono/client';
-import { AppType } from '../api';
+import { AppType } from '@/api';
 import { Result, Status } from './result';
 import { Badges } from './badge';
 import { PkgInfoLink } from './pkg-info';

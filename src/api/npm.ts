@@ -1,8 +1,7 @@
 import { Hono } from 'hono';
-import { cache } from 'hono/cache';
 import { validator } from 'hono/validator';
 import { HTTPException } from 'hono/http-exception';
-import { rateLimitMiddleware } from './middlewares/rate-limit';
+import { rateLimit } from './middlewares/rate-limit';
 
 /**
  * @see https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md
@@ -30,7 +29,7 @@ export type NpmPackage = {
   };
 };
 
-export function getGitHubRepoFromRepository(repo: NpmPackage['repository']) {
+function getGitHubRepoFromRepository(repo: NpmPackage['repository']) {
   if (!repo) {
     return null;
   }
@@ -57,8 +56,6 @@ export function getGitHubRepoFromRepository(repo: NpmPackage['repository']) {
   return null;
 }
 
-type ContributorData = object;
-
 /**
  * @see https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repository-contributors
  */
@@ -76,14 +73,14 @@ async function listContributors(owner: string, repo: string, page: number = 1) {
     },
   );
 
-  const contributorsList = (await res.json()) as ContributorData[];
+  const contributorsList = (await res.json()) as unknown[];
   return contributorsList;
 }
 
 async function getAllContributors(owner: string, repo: string) {
-  const contributors: ContributorData[] = [];
+  const contributors: unknown[] = [];
   let page = 1;
-  let list: ContributorData[];
+  let list: unknown[];
   do {
     list = await listContributors(owner, repo, page);
     contributors.push(...list);
@@ -115,11 +112,7 @@ const app = new Hono();
 
 export const npmRoute = app.get(
   '/',
-  cache({
-    cacheName: 'npm-api',
-    cacheControl: 'max-age=86400, stale-while-revalidate=3600',
-  }),
-  rateLimitMiddleware({
+  rateLimit({
     max: 500,
     ttl: 1000 * 60 * 5, // 5分
     limit: 30,

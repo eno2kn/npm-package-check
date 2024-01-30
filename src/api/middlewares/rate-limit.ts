@@ -1,8 +1,8 @@
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import { RateLimit, RateLimitConfig } from '../../lib/rate-limit';
+import { RateLimit, RateLimitConfig } from '@/lib/rate-limit';
 
-export const rateLimitMiddleware = (config: RateLimitConfig) => {
+export const rateLimit = (config: RateLimitConfig) => {
   const ratelimit = new RateLimit(config);
 
   return createMiddleware(async (c, next) => {
