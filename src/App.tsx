@@ -122,8 +122,10 @@ export const App: React.FC = () => {
 
   return (
     <div className="px-6 py-8 max-w-3xl mx-auto">
-      <form onSubmit={handleSubmit} className="mb-6">
-        <div className="flex border border-gray-300 rounded overflow-hidden focus-within:ring-2 focus-within:ring-sky-500/30">
+      <h1 className="mb-4 text-lg font-semibold">npm package check</h1>
+      <p>パッケージ名を入力するとパッケージの情報を返します</p>
+      <form onSubmit={handleSubmit} className="my-6">
+        <div className="flex border border-gray-300 rounded overflow-hidden focus-within:ring-2 focus-within:ring-sky-500/30 focus-within:border-sky-500">
           <label htmlFor="package-name" className="sr-only">
             パッケージ名
           </label>
@@ -133,6 +135,7 @@ export const App: React.FC = () => {
             value={inputPkgName}
             onChange={(e) => setInputPkgName(e.target.value)}
             className="w-full px-3 py-2 focus-visible:outline-none"
+            placeholder="package name"
           />
           <button
             type="submit"
