@@ -56,37 +56,34 @@ function getGitHubRepoFromRepository(repo: NpmPackage['repository']) {
   return null;
 }
 
-/**
- * @see https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repository-contributors
- */
-async function listContributors(owner: string, repo: string, page: number = 1) {
+async function getContributorCount(
+  owner: string,
+  repo: string,
+): Promise<number | null> {
   const res = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/contributors?per_page=100&page=${page}`,
+    `https://api.github.com/repos/${owner}/${repo}/contributors?per_page=1`,
     {
       method: 'GET',
       headers: {
         Accept: 'application/vnd.github+json',
         'X-GitHub-Api-Version': '2022-11-28',
-        // https://docs.github.com/ja/rest/using-the-rest-api/troubleshooting-the-rest-api?apiVersion=2022-11-28#user-agent-required
         'User-Agent': 'npm-package-check',
       },
     },
   );
 
-  const contributorsList = (await res.json()) as unknown[];
-  return contributorsList;
-}
-
-async function getAllContributors(owner: string, repo: string) {
-  const contributors: unknown[] = [];
-  let page = 1;
-  let list: unknown[];
-  do {
-    list = await listContributors(owner, repo, page);
-    contributors.push(...list);
-    page++;
-  } while (list.length > 0);
-  return contributors;
+  // <https://api.github.com/repositories/438384984/contributors?per_page=1&page=2>; rel="next", <https://api.github.com/repositories/438384984/contributors?per_page=1&page=110>; rel="last"
+  const link = res.headers.get('Link');
+  if (!link) {
+    const json = (await res.json()) as unknown[];
+    const count = json.length;
+    return count;
+  }
+  const match = link.match(/page=(?<count>\d+)>; rel="last"$/);
+  if (!match) return null;
+  const count = Number(match.groups?.count);
+  if (Number.isNaN(count)) return null;
+  return count;
 }
 
 /**
@@ -163,7 +160,7 @@ export const npmRoute = app.get(
 
       const [downloads, contributors] = await Promise.all([
         getDonwloads(name),
-        getAllContributors(owner, repo),
+        getContributorCount(owner, repo),
       ]);
 
       return c.json({
@@ -172,7 +169,7 @@ export const npmRoute = app.get(
           publishedAt,
         },
         downloads: downloads.downloads,
-        contributors: contributors.length,
+        contributors: contributors ?? undefined,
         github: `https://github.com/${owner}/${repo}`,
       });
     }
