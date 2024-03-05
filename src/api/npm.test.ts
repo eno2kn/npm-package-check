@@ -1,34 +1,46 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, afterAll, afterEach, beforeAll } from 'vitest';
 import { Hono } from 'hono';
+import { server } from '@/mocks/server';
 import { npmRoute } from './npm';
 
 describe('GET /api/npm', () => {
+  beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+
+  afterAll(() => server.close());
+
+  afterEach(() => {
+    server.resetHandlers();
+  });
+
   const app = new Hono().basePath('/api');
 
   app.route('/npm', npmRoute);
 
   test('Should return 200 response', async () => {
-    const params = new URLSearchParams({
-      name: 'hono',
-    });
-
-    const res = await app.request(`/api/npm?${params.toString()}`);
+    const res = await app.request(`/api/npm?name=hono`);
     expect(res.status).toBe(200);
 
     const body = await res.json();
+    console.log(body);
+
     expect(body).toEqual({
       latest: {
-        version: expect.any(String),
-        publishedAt: expect.any(String),
+        version: '4.0.9',
+        publishedAt: '2024-03-03T05:20:10.983Z',
       },
-      downloads: expect.any(Number),
-      contributors: expect.any(Number),
-      github: expect.any(String),
+      downloads: 130682,
+      contributors: 110,
+      github: 'https://github.com/honojs/hono',
     });
   });
 
   test('Should return 400 response', async () => {
     const res = await app.request(`/api/npm`);
     expect(res.status).toBe(400);
+  });
+
+  test('Should return 404 response', async () => {
+    const res = await app.request(`/api/npm?name=excited!`);
+    expect(res.status).toBe(404);
   });
 });

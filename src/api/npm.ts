@@ -74,6 +74,7 @@ async function getContributorCount(
 
   // <https://api.github.com/repositories/438384984/contributors?per_page=1&page=2>; rel="next", <https://api.github.com/repositories/438384984/contributors?per_page=1&page=110>; rel="last"
   const link = res.headers.get('Link');
+  console.log('link header', res.headers);
   if (!link) {
     const json = (await res.json()) as unknown[];
     const count = json.length;
@@ -126,7 +127,6 @@ export const npmRoute = app.get(
   async (c) => {
     const { name } = c.req.valid('query');
 
-    // npm registry API
     const npmPkgRes = await fetch(`https://registry.npmjs.org/${name}`, {
       method: 'GET',
     });
