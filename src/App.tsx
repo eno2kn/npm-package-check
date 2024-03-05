@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
 import { hc } from 'hono/client';
 import { AppType } from '@/api';
-import { Result, Status } from './result';
-import { Badges } from './badge';
-import { PkgInfoLink } from './pkg-info';
+import { Result, Status } from '@/components/result';
+import { Badges } from '@/components/badge';
+import { PkgInfoLink } from '@/components/pkg-info';
 
 type NpmPkgData = {
   latest:
@@ -35,7 +35,7 @@ const usePkgStatus = (data: NpmPkgData, isLoading: boolean) => {
   );
 
   const downloadsStatus = useMemo(
-    () => getStatus(data.downloads, (v) => v >= 500),
+    () => getStatus(data.downloads, (v) => v >= 1000),
     [getStatus, data.downloads],
   );
   const latestStatus = useMemo(
@@ -44,7 +44,7 @@ const usePkgStatus = (data: NpmPkgData, isLoading: boolean) => {
         data.latest,
         (v) =>
           Date.now() - new Date(v.publishedAt).getTime() <
-          1000 * 60 * 60 * 24 * 365,
+          1000 * 60 * 60 * 24 * 365, // 1年以内
       ),
     [getStatus, data.latest],
   );
