@@ -15,7 +15,7 @@ app.use(
 
 const routes = app.route('/api', npmRoute).get('*', (c) => {
   return c.html(
-    renderToString(
+    `<!DOCTYPE html>${renderToString(
       <html>
         <head>
           <meta charSet="UTF-8" />
@@ -40,12 +40,27 @@ const routes = app.route('/api', npmRoute).get('*', (c) => {
               <script type="module" src="/src/client.tsx"></script>
             </>
           )}
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.VITE_GA_MEASUREMENT_ID}`}
+          ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+            
+              gtag('config', '${import.meta.env.VITE_GA_MEASUREMENT_ID}');
+             `,
+            }}
+          ></script>
         </head>
         <body>
           <div id="root"></div>
         </body>
       </html>,
-    ),
+    )}`,
   );
 });
 
