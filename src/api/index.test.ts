@@ -1,7 +1,7 @@
 import { describe, test, expect, afterAll, afterEach, beforeAll } from 'vitest';
 import { Hono } from 'hono';
 import { server } from '@/mocks/server';
-import { npmRoute } from './npm';
+import { apiRoute } from './index';
 
 describe('GET /api/npm', () => {
   beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
@@ -12,9 +12,9 @@ describe('GET /api/npm', () => {
     server.resetHandlers();
   });
 
-  const app = new Hono().basePath('/api');
+  const app = new Hono();
 
-  app.route('/npm', npmRoute);
+  app.route('/api', apiRoute);
 
   test('Should return 200 response', async () => {
     const res = await app.request(`/api/npm?name=hono`);

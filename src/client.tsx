@@ -1,9 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 import { hc } from 'hono/client';
-import { AppType } from '@/api';
 import { Result, Status } from '@/components/result';
 import { Badges } from '@/components/badge';
 import { PkgInfoLink } from '@/components/pkg-info';
+import type { AppType } from './api';
+import './index.css';
 
 type NpmPkgData = {
   latest:
@@ -60,7 +62,7 @@ const usePkgStatus = (data: NpmPkgData, isLoading: boolean) => {
   };
 };
 
-export const App: React.FC = () => {
+const App: React.FC = () => {
   const [inputPkgName, setInputPkgName] = useState('');
   const [pkgName, setPkgName] = useState('');
 
@@ -74,7 +76,7 @@ export const App: React.FC = () => {
     isLoading,
   );
 
-  const client = hc<AppType>('/');
+  const client = hc<AppType>('/api');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -85,7 +87,7 @@ export const App: React.FC = () => {
     setPkgName('');
     setData(initialData);
 
-    const res = await client.api.npm.$get({
+    const res = await client.npm.$get({
       query: { name: inputPkgName },
     });
 
@@ -254,3 +256,7 @@ export const App: React.FC = () => {
     </div>
   );
 };
+
+const domNode = document.getElementById('root')!;
+const root = createRoot(domNode);
+root.render(<App />);

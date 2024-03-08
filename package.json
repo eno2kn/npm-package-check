@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev --compatibility-date=2023-10-30 -- vite",
-    "build": "tsc && vite build",
+    "dev": "vite",
+    "build": "vite build --mode client && vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "format": "prettier . --write",
-    "preview": "vite preview",
+    "preview": "wrangler pages dev dist",
     "test": "vitest run"
   },
   "dependencies": {
@@ -19,11 +19,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^8.57.0",
+    "@hono/vite-cloudflare-pages": "^0.2.5",
+    "@hono/vite-dev-server": "^0.8.2",
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "@vitejs/plugin-react-swc": "^3.6.0",
     "autoprefixer": "^10.4.18",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
