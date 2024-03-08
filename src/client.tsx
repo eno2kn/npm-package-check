@@ -1,9 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 import { hc } from 'hono/client';
-import { AppType } from '@/api';
 import { Result, Status } from '@/components/result';
 import { Badges } from '@/components/badge';
 import { PkgInfoLink } from '@/components/pkg-info';
+import type { AppType } from './index';
+import './index.css';
 
 type NpmPkgData = {
   latest:
@@ -88,6 +90,7 @@ export const App: React.FC = () => {
     const res = await client.api.npm.$get({
       query: { name: inputPkgName },
     });
+    // console.log(await res.text());
 
     if (!res.ok) {
       setLoading(false);
@@ -254,3 +257,7 @@ export const App: React.FC = () => {
     </div>
   );
 };
+
+const domNode = document.getElementById('root')!;
+const root = createRoot(domNode);
+root.render(<App />);

@@ -13,6 +13,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "react",
 
     /* Linting */
     "strict": true,
@@ -22,9 +23,9 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-    },
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src", "functions"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
