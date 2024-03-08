@@ -62,7 +62,7 @@ const usePkgStatus = (data: NpmPkgData, isLoading: boolean) => {
   };
 };
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   const [inputPkgName, setInputPkgName] = useState('');
   const [pkgName, setPkgName] = useState('');
 
