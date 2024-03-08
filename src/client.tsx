@@ -4,7 +4,7 @@ import { hc } from 'hono/client';
 import { Result, Status } from '@/components/result';
 import { Badges } from '@/components/badge';
 import { PkgInfoLink } from '@/components/pkg-info';
-import type { AppType } from './api';
+import type { AppType } from './index';
 import './index.css';
 
 type NpmPkgData = {
@@ -76,7 +76,7 @@ export const App: React.FC = () => {
     isLoading,
   );
 
-  const client = hc<AppType>('/api');
+  const client = hc<AppType>('/');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,9 +87,10 @@ export const App: React.FC = () => {
     setPkgName('');
     setData(initialData);
 
-    const res = await client.npm.$get({
+    const res = await client.api.npm.$get({
       query: { name: inputPkgName },
     });
+    // console.log(await res.text());
 
     if (!res.ok) {
       setLoading(false);

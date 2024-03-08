@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import { cache } from 'hono/cache';
 import { validator } from 'hono/validator';
 import { HTTPException } from 'hono/http-exception';
 import { rateLimit } from './middlewares/rate-limit';
@@ -108,15 +107,7 @@ async function getDonwloads(name: string) {
 
 const app = new Hono();
 
-app.use(
-  '*',
-  cache({
-    cacheName: 'npm-pkg-api',
-    cacheControl: 'max-age=86400, stale-while-revalidate=3600',
-  }),
-);
-
-export const apiRoute = app.get(
+export const npmRoute = app.get(
   '/npm',
   rateLimit({
     max: 500,
@@ -188,5 +179,3 @@ app.onError((err, c) => {
   if (err instanceof HTTPException) return err.getResponse();
   return c.json({ message: err.message }, 500);
 });
-
-export type AppType = typeof apiRoute;

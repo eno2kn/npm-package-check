@@ -1,12 +1,19 @@
 import { Hono } from 'hono';
+import { cache } from 'hono/cache';
 import { renderToString } from 'react-dom/server';
-import { apiRoute } from './api';
+import { npmRoute } from './api';
 
 const app = new Hono();
 
-app.route('/api', apiRoute);
+app.use(
+  '/api/*',
+  cache({
+    cacheName: 'npm-pkg-api',
+    cacheControl: 'max-age=86400, stale-while-revalidate=3600',
+  }),
+);
 
-app.get('*', (c) => {
+const routes = app.route('/api', npmRoute).get('*', (c) => {
   return c.html(
     renderToString(
       <html>
@@ -42,4 +49,5 @@ app.get('*', (c) => {
   );
 });
 
+export type AppType = typeof routes;
 export default app;
