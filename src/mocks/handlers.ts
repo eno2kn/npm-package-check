@@ -55,7 +55,7 @@ export const handlers = [
     }
 
     return HttpResponse.json(
-      { error: 'package :pkg not found' },
+      { error: `package ${pkg} not found` },
       {
         status: 404,
       },
@@ -87,5 +87,25 @@ export const handlers = [
         status: 404,
       },
     );
+  }),
+  http.get('/api/npm', ({ request }) => {
+    const url = new URL(request.url);
+    const name = url.searchParams.get('name');
+
+    if (name === 'hono') {
+      return HttpResponse.json({
+        latest: {
+          version: '4.0.10',
+          publishedAt: '2024-03-05T22:27:53.005Z',
+        },
+        downloads: 143796,
+        contributors: 110,
+        github: 'https://github.com/honojs/hono',
+      });
+    }
+
+    return new HttpResponse('Package not found.', {
+      status: 404,
+    });
   }),
 ];

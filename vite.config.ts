@@ -25,6 +25,9 @@ export default defineConfig(({ mode }) => {
   } else if (mode === 'test') {
     return {
       ...globalConfig,
+      test: {
+        environment: 'happy-dom',
+      },
     };
   } else {
     return {
