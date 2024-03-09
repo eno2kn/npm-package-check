@@ -177,5 +177,5 @@ export const npmRoute = app.get(
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) return err.getResponse();
-  return c.json({ message: err.message }, 500);
+  return c.text(err.message, 500);
 });

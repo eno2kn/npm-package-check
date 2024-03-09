@@ -28,8 +28,7 @@ const IconCheckCircle: React.FC = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="w-6 h-6 text-green-500"
-      role="img"
-      aria-label="success"
+      aria-hidden="true"
     >
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <path d="m9 11 3 3L22 4" />
@@ -47,8 +46,7 @@ const IconAlertCircle: React.FC = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="w-6 h-6 text-red-500"
-      role="img"
-      aria-label="warning"
+      aria-hidden="true"
     >
       <circle cx="12" cy="12" r="10" />
       <line x1="12" x2="12" y1="8" y2="12" />
@@ -67,8 +65,7 @@ const IconLoader: React.FC = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="w-6 h-6 text-gray-400 animate-spin"
-      role="img"
-      aria-label="loading"
+      aria-hidden="true"
     >
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
@@ -103,13 +100,12 @@ export const Result: React.FC<{
   return (
     <div
       className={cn([
-        'flex items-center gap-4 rounded border border-gray-200 bg-gray-50 p-4',
+        'flex flex-col gap-x-4 gap-y-1 relative rounded border border-gray-200 bg-gray-50 p-4 pl-14',
         status === 'initial' && 'opacity-50',
       ])}
     >
-      <ResultIcon status={status} />
-      <div className="flex flex-col gap-1">
-        <div className="text-sm text-gray-700">{label}</div>
+      <dt className="text-sm text-gray-700">{label}</dt>
+      <dd>
         {typeof value === 'undefined' ? (
           <div className="h-6" />
         ) : (
@@ -118,7 +114,13 @@ export const Result: React.FC<{
             {counter && <span className="text-sm">{counter}</span>}
           </div>
         )}
-      </div>
+        <div
+          className="absolute top-1/2 left-4 -translate-y-1/2"
+          aria-hidden="true"
+        >
+          <ResultIcon status={status} />
+        </div>
+      </dd>
     </div>
   );
 });
