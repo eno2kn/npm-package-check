@@ -18,38 +18,48 @@ export type NpmPackage = {
   repository?: {
     /**
      * @example
-     *  - 1 `git://github.com/{owner}/{repo}.git`
-     *  - 1 `git+ssh://git@github.com/{owner}/{repo}.git`
-     *  - 1 `git+https://github.com/{owner}/{repo}.git`
-     *  - 1 `https://github.com/{owner}/{repo}.git`
-     *  - 1 `ssh://git@github.com/{owner}/{repo}.git`
-     *  - 2 `github:{owner}/{repo}`
+     *  - `git://github.com/{owner}/{repo}.git`
+     *  - `git+ssh://git@github.com/{owner}/{repo}.git`
+     *  - `git+https://github.com/{owner}/{repo}.git`
+     *  - `https://github.com/{owner}/{repo}.git`
+     *  - `ssh://git@github.com/{owner}/{repo}.git`
+     *  - `github:{owner}/{repo}`
+     *  - `https://github.com/{owner}/{repo}`
      */
     url: string;
   };
 };
 
 function getGitHubRepoFromRepository(repo: NpmPackage['repository']) {
-  if (!repo) {
+  if (!repo) return null;
+
+  const url = repo.url;
+
+  if (/\.git$/.exec(url)) {
+    const pattern =
+      /^(git|git\+ssh|git\+https|https|ssh):\/\/(git@)?(github\.com)\/(?<owner>.+?)\/(?<repo>.+?).git$/.exec(
+        url,
+      );
+    if (pattern) {
+      const owner = pattern.groups?.owner;
+      const repo = pattern.groups?.repo;
+      return owner && repo ? { owner, repo } : null;
+    }
     return null;
   }
-  const url = repo.url;
-  const pattern1 =
-    /^(git|git\+ssh|git\+https|https|ssh):\/\/(git@)?(github\.com)\/(?<owner>.+?)\/(?<repo>.+?).git$/.exec(
-      url,
-    );
-  if (pattern1) {
-    const owner = pattern1.groups?.owner;
-    const repo = pattern1.groups?.repo;
 
+  const patternShortcut = /^github:(?<owner>.+?)\/(?<repo>.+?)$/.exec(url);
+  if (patternShortcut) {
+    const owner = patternShortcut.groups?.owner;
+    const repo = patternShortcut.groups?.repo;
     return owner && repo ? { owner, repo } : null;
   }
 
-  const pattern2 = /^github:(?<owner>.+?)\/(?<repo>.+?)$/.exec(url);
-  if (pattern2) {
-    const owner = pattern2.groups?.owner;
-    const repo = pattern2.groups?.repo;
-
+  const patternGitHub =
+    /^https:\/\/github\.com\/(?<owner>.+?)\/(?<repo>.+?)$/.exec(url);
+  if (patternGitHub) {
+    const owner = patternGitHub.groups?.owner;
+    const repo = patternGitHub.groups?.repo;
     return owner && repo ? { owner, repo } : null;
   }
 
