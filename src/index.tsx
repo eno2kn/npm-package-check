@@ -5,13 +5,16 @@ import { npmRoute } from './api';
 
 const app = new Hono();
 
-app.use(
-  '/api/*',
-  cache({
-    cacheName: 'npm-pkg-api',
-    cacheControl: 'max-age=86400, stale-while-revalidate=3600',
-  }),
-);
+app.use('/api/*', async (c, next) => {
+  if (import.meta.env.MODE === 'production') {
+    return cache({
+      cacheName: 'npm-pkg-api',
+      cacheControl: 'max-age=86400, stale-while-revalidate=3600',
+    })(c, next);
+  } else {
+    await next();
+  }
+});
 
 const routes = app.route('/api', npmRoute).get('*', (c) => {
   return c.html(

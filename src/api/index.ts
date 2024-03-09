@@ -144,7 +144,6 @@ export const npmRoute = app.get(
       throw new HTTPException(404, { message: 'Package not found.' });
     }
     const pkg = (await npmPkgRes.json()) as NpmPackage;
-    console.log('pkg.repository', pkg.repository);
 
     // latest version
     const latest = pkg['dist-tags'].latest;
