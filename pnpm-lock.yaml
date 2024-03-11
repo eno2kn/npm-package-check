@@ -26,8 +26,8 @@ devDependencies:
     specifier: ^0.2.5
     version: 0.2.5(hono@4.0.9)
   '@hono/vite-dev-server':
-    specifier: ^0.8.2
-    version: 0.8.2(hono@4.0.9)
+    specifier: ^0.9.0
+    version: 0.9.0(hono@4.0.9)
   '@testing-library/jest-dom':
     specifier: ^6.4.2
     version: 6.4.2(vitest@1.3.1)
@@ -683,8 +683,8 @@ packages:
       hono: 4.0.9
     dev: true
 
-  /@hono/vite-dev-server@0.8.2(hono@4.0.9):
-    resolution: {integrity: sha512-KD+LkChriPWTZ8oJ4V3qlQA3EqBtdi3qG2a8IVYwAZv9BtPWYN2RzzIERL+Rhzu3TAgqOHcgUsI7MA+e3QL1+g==}
+  /@hono/vite-dev-server@0.9.0(hono@4.0.9):
+    resolution: {integrity: sha512-2kyl0Ly5lBwXodF0YEKlCWXRX8g4ovFZo++O+9LPA+SGvUQLfF2NVs8iTPJ7ZyL2VRa1ZRnUtjK+rFyEbqCJzg==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: '*'
