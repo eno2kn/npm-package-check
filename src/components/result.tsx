@@ -1,76 +1,6 @@
 import { memo } from 'react';
+import { Circle, CheckCircle, AlertCircle, LoaderCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
-
-const IconCircle: React.FC = () => {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-6 h-6 text-gray-400"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="10" />
-    </svg>
-  );
-};
-
-const IconCheckCircle: React.FC = () => {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-6 h-6 text-green-500"
-      aria-hidden="true"
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <path d="m9 11 3 3L22 4" />
-    </svg>
-  );
-};
-
-const IconAlertCircle: React.FC = () => {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-6 h-6 text-red-500"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" x2="12" y1="8" y2="12" />
-      <line x1="12" x2="12.01" y1="16" y2="16" />
-    </svg>
-  );
-};
-
-const IconLoader: React.FC = () => {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="w-6 h-6 text-gray-400 animate-spin"
-      aria-hidden="true"
-    >
-      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-    </svg>
-  );
-};
 
 export type Status = 'initial' | 'loading' | 'success' | 'error';
 
@@ -79,13 +9,13 @@ export const ResultIcon: React.FC<{
 }> = ({ status }) => {
   switch (status) {
     case 'initial':
-      return <IconCircle />;
+      return <Circle className="w-6 h-6 text-gray-400" />;
     case 'loading':
-      return <IconLoader />;
+      return <LoaderCircle className="w-6 h-6 text-gray-400 animate-spin" />;
     case 'success':
-      return <IconCheckCircle />;
+      return <CheckCircle className="w-6 h-6 text-green-500" />;
     case 'error':
-      return <IconAlertCircle />;
+      return <AlertCircle className="w-6 h-6 text-red-500" />;
     default:
       break;
   }
