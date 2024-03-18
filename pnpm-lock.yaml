@@ -68,8 +68,8 @@ devDependencies:
     specifier: ^13.7.0
     version: 13.7.0
   msw:
-    specifier: ^2.2.3
-    version: 2.2.3(typescript@5.3.3)
+    specifier: ^2.2.6
+    version: 2.2.6(typescript@5.3.3)
   postcss:
     specifier: ^8.4.35
     version: 8.4.35
@@ -2840,8 +2840,8 @@ packages:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
     dev: true
 
-  /msw@2.2.3(typescript@5.3.3):
-    resolution: {integrity: sha512-84CoNCkcJ/EvY8Tv0tD/6HKVd4S5HyGowHjM5W12K8Wgryp4fikqS7IaTOceyQgP5dNedxo2icTLDXo7dkpxCg==}
+  /msw@2.2.6(typescript@5.3.3):
+    resolution: {integrity: sha512-c33yy8/ahOqvE/OGy0rz4CZx9/EZAiYq8PLAGSW3pU5fje2MAd7yiBr2o6D5bRJtkJ9j4ekGtDS3Fj61Sp9zSQ==}
     engines: {node: '>=18'}
     hasBin: true
     requiresBuild: true
